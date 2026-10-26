@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>try{var t=localStorage.getItem("theme");if(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.dataset.theme="dark"}catch(e){}</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Details - FEXIWALT</title>
+    <meta name="description" content="See photos, price and location, then contact the seller on WhatsApp. Buy and sell across Ghana on FEXIWALT.">
+    <meta name="robots" content="index,follow">
+    <meta name="theme-color" content="#ffffff">
+    <meta property="og:site_name" content="FEXIWALT">
+    <meta property="og:locale" content="en_GH">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ad Details - FEXIWALT">
+    <meta property="og:description" content="See photos, price and location, then contact the seller on WhatsApp. Buy and sell across Ghana on FEXIWALT.">
+    <meta property="og:image" content="https://fexiwalt.com/images/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="FEXIWALT: buy and sell anything, near you in Ghana">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ad Details - FEXIWALT">
+    <meta name="twitter:description" content="See photos, price and location, then contact the seller on WhatsApp. Buy and sell across Ghana on FEXIWALT.">
+    <meta name="twitter:image" content="https://fexiwalt.com/images/og-image.jpg">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,600;6..12,700;6..12,800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/ad.css">
+    <link rel="stylesheet" href="css/dark.css">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png">
+    <link rel="icon" href="favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="96x96" href="images/icons/favicon-96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="images/icons/icon-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="FEXIWALT">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+
+
+<header class="hd" id="siteHeader"></header>
+<script src="js/core/header.js"></script>
+
+<main class="wrap">
+
+    <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="index.html">Home</a> <i class="fa-solid fa-chevron-right"></i>
+        <a href="category.html?all=1" id="crumbCat">Category</a> <i class="fa-solid fa-chevron-right"></i>
+        <span id="crumbTitle">Ad</span>
+    </nav>
+
+    <div id="notfound" class="notfound" hidden>
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <h2>Ad not found</h2>
+        <p>This ad may have been removed or the link is incorrect.</p>
+        <a href="index.html" class="btn solid">Back to home</a>
+    </div>
+
+    <article class="ad" id="ad" hidden>
+
+        <div class="state-banner" id="stateBanner" hidden></div>
+
+        <!-- ============ GALLERY ============ -->
+        <section class="gallery">
+            <div class="swiper adMain">
+                <div class="swiper-wrapper" id="mainSlides"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+                <span class="counter" id="counter"></span>
+            </div>
+            <div class="swiper adThumbs">
+                <div class="swiper-wrapper" id="thumbSlides"></div>
+            </div>
+        </section>
+
+        <!-- ============ DETAILS ============ -->
+        <section class="details">
+            <div class="info">
+                <div class="tags">
+                    <span class="tag" id="condition"></span>
+                    <span class="tag ghost" id="negotiable"></span>
+                    <div class="tag-actions">
+                        <button type="button" class="save-btn" id="saveBtn" data-heart="" hidden><i class="fa-regular fa-heart"></i> <span class="lbl">Save</span></button>
+                        <button type="button" class="save-btn share-btn" id="shareBtn"><i class="fa-solid fa-share-nodes"></i> Share</button>
+                    </div>
+                </div>
+                <h1 id="title"></h1>
+                <div class="price" id="price"></div>
+                <div class="meta">
+                    <span><i class="fa-solid fa-location-dot"></i> <b id="location"></b></span>
+                    <span><i class="fa-regular fa-clock"></i> <span id="posted"></span></span>
+                    <span><i class="fa-solid fa-tag"></i> <span id="category"></span></span>
+                </div>
+
+                <h2>Description</h2>
+                <p class="desc" id="description"></p>
+            </div>
+
+            <aside class="seller">
+                <div class="seller-head">
+                    <div class="avatar" id="avatar"></div>
+                    <div>
+                        <small>Sold by</small>
+                        <h3 id="sellerName"></h3>
+                    </div>
+                </div>
+                <!-- verified badge + Follow button (only for sellers an admin has verified; see js/features/follow.js) -->
+                <div class="follow-box" id="followBox" hidden></div>
+
+                <a class="wa-btn" id="waBtn" target="_blank" rel="noopener">
+                    <i class="fab fa-whatsapp"></i> Contact via WhatsApp
+                </a>
+
+                <button type="button" class="report-btn" id="reportBtn" hidden><i class="fa-regular fa-flag"></i> Report this ad</button>
+
+                <div class="safety">
+                    <b><i class="fa-solid fa-shield-halved"></i> Safety tips</b>
+                    <ul>
+                        <li>Meet in a public place</li>
+                        <li>Inspect the item before paying</li>
+                        <li>Never pay in advance</li>
+                    </ul>
+                </div>
+            </aside>
+        </section>
+    </article>
+</main>
+
+<!-- sticky contact bar for phones -->
+<div class="mobile-cta" id="mobileCta" hidden>
+    <b id="ctaPrice"></b>
+    <a class="wa-btn" id="waBtn2" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+</div>
+
+<footer id="siteFooter"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="module" src="js/pages/ad.js"></script>
+<script type="module" src="js/core/session.js"></script>
+</body>
+</html>

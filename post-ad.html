@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>try{var t=localStorage.getItem("theme");if(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.dataset.theme="dark"}catch(e){}</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post an Ad - FEXIWALT</title>
+    <meta name="description" content="Post a free ad on FEXIWALT.">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="theme-color" content="#ffffff">
+    <meta property="og:site_name" content="FEXIWALT">
+    <meta property="og:locale" content="en_GH">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Post an Ad - FEXIWALT">
+    <meta property="og:description" content="Post a free ad on FEXIWALT.">
+    <meta property="og:image" content="https://fexiwalt.com/images/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="FEXIWALT: buy and sell anything, near you in Ghana">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Post an Ad - FEXIWALT">
+    <meta name="twitter:description" content="Post a free ad on FEXIWALT.">
+    <meta name="twitter:image" content="https://fexiwalt.com/images/og-image.jpg">
+
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,600;6..12,700;6..12,800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/post-ad.css">
+    <link rel="stylesheet" href="css/dark.css">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png">
+    <link rel="icon" href="favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="96x96" href="images/icons/favicon-96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="images/icons/icon-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="FEXIWALT">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body data-auth="required">
+
+
+<header class="hd" id="siteHeader"></header>
+<script src="js/core/header.js"></script>
+
+<main class="wrap">
+
+    <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="index.html">Home</a> <i class="fa-solid fa-chevron-right"></i>
+        <span>Post an Ad</span>
+    </nav>
+
+    <!-- shown instead of the form until the seller's email is verified -->
+    <section class="verify" id="verifyPanel" hidden>
+        <i class="fa-regular fa-envelope-open"></i>
+        <h2>Verify your email to post an ad</h2>
+        <p>We sent a verification link to <b id="verifyEmail"></b>. Click it, then come back and press the button below.</p>
+        <div class="btns">
+            <button type="button" class="btn solid" id="verifiedBtn">I've verified my email</button>
+            <button type="button" class="btn cancel" id="resendBtn">Resend the email</button>
+        </div>
+        <small>Can't find it? Check your Spam or Junk folder.</small>
+    </section>
+
+    <!-- shown instead of the form when an admin has suspended the account -->
+    <section class="verify" id="banPanel" hidden>
+        <i class="fa-solid fa-user-slash" style="color:var(--red)"></i>
+        <h2>Your account is suspended</h2>
+        <p>You can't post or edit ads right now. <span id="banReason"></span></p>
+        <div class="btns">
+            <a href="contact.html" class="btn solid">Contact us</a>
+            <a href="my-ads.html" class="btn cancel">Back to My Ads</a>
+        </div>
+    </section>
+
+    <div class="post-layout">
+
+        <!-- ============ FORM ============ -->
+        <form id="adForm" class="post-card" novalidate>
+            <div class="post-head">
+                <h1>Post an Ad</h1>
+                <p>Fill in the details below. Ads with clear photos sell faster.</p>
+            </div>
+
+            <div class="review-note" id="reviewNote" hidden>
+                <i class="fa-solid fa-circle-info"></i>
+                This ad is live. <b>Saving changes sends it back for review</b>, and it stays hidden until an admin approves it again.
+            </div>
+
+            <div class="field">
+                <label for="title">Ad title <span class="req">*</span></label>
+                <input id="title" name="title" type="text" required minlength="5" maxlength="80"
+                       placeholder="e.g. iPhone 14 Pro Max 256GB">
+                <div class="hint"><span class="err" data-for="title"></span><span class="count" id="titleCount">0 / 80</span></div>
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label for="category">Category <span class="req">*</span></label>
+                    <select id="category" name="category" required>
+                        <option value="" selected disabled>Select a category</option>
+                        <option>Electronics</option>
+                        <option>Mobile Phones &amp; Tablets</option>
+                        <option>Vehicles</option>
+                        <option>Property</option>
+                        <option>Fashion</option>
+                        <option>Home &amp; Furniture</option>
+                        <option>Health &amp; Beauty</option>
+                        <option>Jobs</option>
+                        <option>Services</option>
+                        <option>Others</option>
+                    </select>
+                    <div class="hint"><span class="err" data-for="category"></span></div>
+                </div>
+
+                <div class="field">
+                    <label>Condition <span class="req">*</span></label>
+                    <div class="seg">
+                        <label><input type="radio" name="condition" value="New" required> <span>New</span></label>
+                        <label><input type="radio" name="condition" value="Used"> <span>Used</span></label>
+                    </div>
+                    <div class="hint"><span class="err" data-for="condition"></span></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label for="price">Price (GH₵) <span class="req">*</span></label>
+                    <div class="prefix"><em>GH₵</em>
+                        <input id="price" name="price" type="number" required min="1" max="100000000" step="any" inputmode="decimal" placeholder="0.00">
+                    </div>
+                    <label class="check"><input type="checkbox" name="negotiable"> Price is negotiable</label>
+                    <div class="hint"><span class="err" data-for="price"></span></div>
+                </div>
+
+                <div class="field">
+                    <label for="region">Region <span class="req">*</span></label>
+                    <select id="region" name="region" required>
+                        <option value="" selected disabled>Select a region</option>
+                        <!-- the 16 regions are filled in by js/pages/post-ad.js from js/core/locations.js -->
+                    </select>
+                    <div class="hint"><span class="err" data-for="region"></span></div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="area">Area / town <span class="req">*</span></label>
+                <div class="prefix"><em><i class="fa-solid fa-location-dot"></i></em>
+                    <input id="area" name="area" type="text" required minlength="2" maxlength="60" list="areas" autocomplete="off" placeholder="Choose a region first, then start typing (e.g. Ashaley Botwe)">
+                </div>
+                <datalist id="areas"></datalist>
+                <div class="hint"><span class="err" data-for="area"></span><span class="count">Suggestions appear for the region you pick. Type any area that isn't listed.</span></div>
+            </div>
+
+            <div class="field">
+                <label for="oldPrice">Original price (GH₵) <small>(optional, shows a discount)</small></label>
+                <div class="prefix"><em>GH₵</em>
+                    <input id="oldPrice" name="oldPrice" type="number" min="1" max="100000000" step="any" inputmode="decimal" placeholder="Was… (leave empty if not on sale)">
+                </div>
+                <div class="hint"><span class="err" data-for="oldPrice"></span><span class="count">Must be higher than the price. The ad appears in Deals.</span></div>
+            </div>
+
+            <div class="field">
+                <label for="description">Description <span class="req">*</span></label>
+                <textarea id="description" name="description" rows="6" required minlength="20" maxlength="2000"
+                          placeholder="Describe what you're selling: condition, features, reason for selling..."></textarea>
+                <div class="hint"><span class="err" data-for="description"></span><span class="count" id="descCount">0 / 2000</span></div>
+            </div>
+
+            <div class="field">
+                <label for="images">Photos <span class="req">*</span> <small>(up to 8, max 15 MB each; we shrink them for you)</small></label>
+                <label class="drop" id="drop" for="images">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <b>Click to upload or drag &amp; drop</b>
+                    <span>JPG, PNG or WebP. The first photo is your cover.</span>
+                </label>
+                <input id="images" name="images" type="file" accept="image/jpeg,image/png,image/webp" multiple class="sr">
+                <div class="hint"><span class="err" data-for="images"></span></div>
+                <div class="previews" id="previews"></div>
+            </div>
+
+            <div class="field">
+                <label for="phone">WhatsApp number <span class="req">*</span></label>
+                <div class="prefix"><em><i class="fab fa-whatsapp"></i></em>
+                    <input id="phone" name="phone" type="tel" required pattern="(\+233|0)[0-9]{9}" placeholder="0240000000">
+                </div>
+                <div class="hint"><span class="err" data-for="phone"></span><span class="count">Buyers will contact you here</span></div>
+            </div>
+
+            <label class="check terms"><input type="checkbox" name="terms" required> I agree to the <a href="terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a> and confirm this ad follows the rules.</label>
+            <div class="hint"><span class="err" data-for="terms"></span></div>
+
+            <div class="actions-row">
+                <a href="index.html" class="btn cancel">Cancel</a>
+                <button type="submit" class="btn solid submit"><i class="fa-solid fa-paper-plane"></i> Post Ad</button>
+            </div>
+        </form>
+
+        <!-- ============ SIDE TIPS ============ -->
+        <aside class="tips">
+            <h3><i class="fa-solid fa-lightbulb"></i> Tips for a great ad</h3>
+            <ul>
+                <li><i class="fa-solid fa-camera"></i> Use clear, well-lit photos from several angles.</li>
+                <li><i class="fa-solid fa-heading"></i> Write a specific title with brand and model.</li>
+                <li><i class="fa-solid fa-tag"></i> Set a fair price. Check similar ads first.</li>
+                <li><i class="fa-solid fa-align-left"></i> Be honest about the condition and any faults.</li>
+                <li><i class="fa-solid fa-shield-halved"></i> Never share passwords or pay in advance.</li>
+            </ul>
+        </aside>
+    </div>
+
+    <!-- ============ SUCCESS ============ -->
+</main>
+
+<footer id="siteFooter"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="module" src="js/pages/post-ad.js"></script>
+<script type="module" src="js/core/session.js"></script>
+</body>
+</html>

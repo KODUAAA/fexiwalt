@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>try{var t=localStorage.getItem("theme");if(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.dataset.theme="dark"}catch(e){}</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - FEXIWALT</title>
+    <meta name="description" content="FEXIWALT administration.">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="theme-color" content="#ffffff">
+    <meta property="og:site_name" content="FEXIWALT">
+    <meta property="og:locale" content="en_GH">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Admin - FEXIWALT">
+    <meta property="og:description" content="FEXIWALT administration.">
+    <meta property="og:image" content="https://fexiwalt.com/images/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="FEXIWALT: buy and sell anything, near you in Ghana">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Admin - FEXIWALT">
+    <meta name="twitter:description" content="FEXIWALT administration.">
+    <meta name="twitter:image" content="https://fexiwalt.com/images/og-image.jpg">
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,600;6..12,700;6..12,800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/my-ads.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/dark.css">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png">
+    <link rel="icon" href="favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="96x96" href="images/icons/favicon-96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="images/icons/icon-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="FEXIWALT">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body data-auth="required">
+
+
+<header class="hd" id="siteHeader"></header>
+<script src="js/core/header.js"></script>
+
+<main class="wrap" id="adminMain" hidden>
+    <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="index.html">Home</a> <i class="fa-solid fa-chevron-right"></i>
+        <span>Admin</span>
+    </nav>
+
+    <div class="page-head">
+        <div>
+            <h1><i class="fa-solid fa-user-shield"></i> Admin dashboard</h1>
+            <p>Review ads before they go live and manage the marketplace.</p>
+        </div>
+        <button class="btn cancel sm" id="refreshBtn" type="button"><i class="fa-solid fa-rotate"></i> Refresh</button>
+    </div>
+
+    <!-- stats -->
+    <section class="stats" aria-label="Summary">
+        <button class="stat" data-view="all" type="button"><i class="fa-solid fa-rectangle-list"></i><b id="sTotal">–</b><span>Total ads</span></button>
+        <button class="stat warn" data-view="pending" type="button"><i class="fa-regular fa-clock"></i><b id="sPending">–</b><span>Pending review</span></button>
+        <button class="stat ok" data-view="approved" type="button"><i class="fa-regular fa-circle-check"></i><b id="sApproved">–</b><span>Live ads</span></button>
+        <button class="stat sold" data-view="sold" type="button"><i class="fa-solid fa-handshake"></i><b id="sSold">–</b><span>Sold</span></button>
+        <button class="stat users" data-view="users" type="button"><i class="fa-solid fa-users"></i><b id="sUsers">–</b><span>Registered users</span></button>
+        <button class="stat rep" data-view="reports" type="button"><i class="fa-regular fa-flag"></i><b id="sReports">–</b><span>Open reports</span></button>
+    </section>
+
+    <!-- views -->
+    <div class="tabs" id="tabs" role="tablist">
+        <button class="tab" data-view="all" role="tab">All ads</button>
+        <button class="tab on" data-view="pending" role="tab">Pending <span id="cPending">0</span></button>
+        <button class="tab" data-view="approved" role="tab">Approved</button>
+        <button class="tab" data-view="rejected" role="tab">Rejected</button>
+        <button class="tab" data-view="sold" role="tab">Sold</button>
+        <button class="tab" data-view="users" role="tab">Users</button>
+        <button class="tab" data-view="reports" role="tab">Reports <span class="alert" id="cReports" hidden>0</span></button>
+    </div>
+
+    <!-- search + filters (which ones show depends on the tab; see js/pages/admin.js) -->
+    <div class="toolbar">
+        <label class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="adminSearch" type="search" placeholder="Search ads by title, seller, phone, location…" aria-label="Search" autocomplete="off">
+        </label>
+        <select id="adminCat" aria-label="Filter by category"><option value="">All categories</option></select>
+        <select id="adminUserFilter" aria-label="Filter users" hidden>
+            <option value="">All users</option>
+            <option value="admin">Admins</option>
+            <option value="banned">Banned</option>
+            <option value="active">Active (not banned)</option>
+        </select>
+        <span class="result-count" id="resultCount" aria-live="polite"></span>
+    </div>
+
+    <div class="table-wrap" id="tableWrap"></div>
+</main>
+
+<div class="deny" id="deny">
+    <i class="fa-solid fa-spinner fa-spin"></i>
+    <p>Checking access…</p>
+</div>
+
+<footer id="siteFooter"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="module" src="js/pages/admin.js"></script>
+<script type="module" src="js/core/session.js"></script>
+</body>
+</html>

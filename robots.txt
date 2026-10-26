@@ -1,0 +1,17 @@
+# Tells search engines what they may look at. Keep the address in sync with your real domain.
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /post-ad.html
+Disallow: /my-ads.html
+Disallow: /wishlist.html
+Disallow: /login.html
+Disallow: /register.html
+Disallow: /forgot-password.html
+Disallow: /offline.html
+Disallow: /old/
+Disallow: /docs/
+Disallow: /tools/
+Disallow: /firebase/
+
+Sitemap: https://fexiwalt.com/sitemap.xml

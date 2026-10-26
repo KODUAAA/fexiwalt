@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>try{var t=localStorage.getItem("theme");if(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.dataset.theme="dark"}catch(e){}</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Ads - FEXIWALT</title>
+    <meta name="description" content="Search and filter ads by category, price and location. Find phones, vehicles, property, fashion and more near you on FEXIWALT.">
+    <meta name="robots" content="index,follow">
+    <meta name="theme-color" content="#ffffff">
+    <meta property="og:site_name" content="FEXIWALT">
+    <meta property="og:locale" content="en_GH">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Browse Ads - FEXIWALT">
+    <meta property="og:description" content="Search and filter ads by category, price and location. Find phones, vehicles, property, fashion and more near you on FEXIWALT.">
+    <meta property="og:image" content="https://fexiwalt.com/images/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="FEXIWALT: buy and sell anything, near you in Ghana">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Browse Ads - FEXIWALT">
+    <meta name="twitter:description" content="Search and filter ads by category, price and location. Find phones, vehicles, property, fashion and more near you on FEXIWALT.">
+    <meta name="twitter:image" content="https://fexiwalt.com/images/og-image.jpg">
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,600;6..12,700;6..12,800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/my-ads.css">
+    <link rel="stylesheet" href="css/category.css">
+    <link rel="stylesheet" href="css/dark.css">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png">
+    <link rel="icon" href="favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="96x96" href="images/icons/favicon-96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="images/icons/icon-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="FEXIWALT">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+
+
+<header class="hd" id="siteHeader"></header>
+<script src="js/core/header.js"></script>
+
+<main class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="index.html">Home</a> <i class="fa-solid fa-chevron-right"></i>
+        <span id="crumb">All ads</span>
+    </nav>
+
+    <div class="page-head">
+        <div>
+            <h1 id="heading">All ads</h1>
+            <p id="resultCount">Loading…</p>
+        </div>
+        <label class="sort">Sort by
+            <select id="sort">
+                <option value="new">Newest first</option>
+                <option value="low">Price: low to high</option>
+                <option value="high">Price: high to low</option>
+                <option value="discount">Biggest discount</option>
+            </select>
+        </label>
+    </div>
+
+    <div class="cat-layout">
+        <aside class="filters" id="filters">
+            <form id="filterForm">
+                <h3>Filters <button type="button" class="clear" id="clearBtn">Clear all</button></h3>
+
+                <div class="f">
+                    <label for="q">Search</label>
+                    <input id="q" name="q" type="search" placeholder="Keywords">
+                </div>
+
+                <div class="f">
+                    <label for="cat">Category</label>
+                    <select id="cat" name="cat">
+                        <option value="">All categories</option>
+                        <option>Electronics</option>
+                        <option>Mobile Phones &amp; Tablets</option>
+                        <option>Vehicles</option>
+                        <option>Property</option>
+                        <option>Fashion</option>
+                        <option>Home &amp; Furniture</option>
+                        <option>Health &amp; Beauty</option>
+                        <option>Jobs</option>
+                        <option>Services</option>
+                        <option>Others</option>
+                    </select>
+                </div>
+
+                <div class="f">
+                    <label>Price (GH₵)</label>
+                    <div class="pair">
+                        <input name="min" type="number" min="0" placeholder="Min" aria-label="Minimum price">
+                        <input name="max" type="number" min="0" placeholder="Max" aria-label="Maximum price">
+                    </div>
+                </div>
+
+                <div class="f">
+                    <label for="region">Region</label>
+                    <select id="region" name="region">
+                        <option value="">All regions</option>
+                        <!-- filled in by js/pages/category.js from js/core/locations.js -->
+                    </select>
+                </div>
+
+                <div class="f">
+                    <label for="loc">Area / town</label>
+                    <input id="loc" name="loc" type="text" list="filterAreas" autocomplete="off" placeholder="e.g. East Legon">
+                    <datalist id="filterAreas"></datalist>
+                </div>
+
+                <div class="f">
+                    <label>Condition</label>
+                    <div class="chips">
+                        <label><input type="radio" name="cond" value="" checked><span>Any</span></label>
+                        <label><input type="radio" name="cond" value="New"><span>New</span></label>
+                        <label><input type="radio" name="cond" value="Used"><span>Used</span></label>
+                    </div>
+                </div>
+
+                <label class="check dealcheck"><input type="checkbox" name="deals" value="1"> On sale (deals) only</label>
+
+                <button type="submit" class="btn solid apply">Apply filters</button>
+            </form>
+        </aside>
+
+        <section>
+            <button type="button" class="btn cancel filter-toggle" id="filterToggle"><i class="fa-solid fa-sliders"></i> Filters</button>
+            <div class="active-filters" id="activeFilters" hidden aria-label="Active filters"></div>
+            <div class="ads-grid results" id="results"></div>
+        </section>
+    </div>
+</main>
+
+<footer id="siteFooter"></footer>
+
+<script type="module" src="js/pages/category.js"></script>
+<script type="module" src="js/core/session.js"></script>
+</body>
+</html>
