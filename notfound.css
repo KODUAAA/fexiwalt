@@ -1,0 +1,27 @@
+/* 404 page (builds on home.css) */
+.nf{padding:2.5rem 0 3rem;min-height:60vh;display:grid;place-items:start center}
+.nf-card{width:100%;max-width:640px;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);padding:2.6rem 1.6rem 2.2rem}
+.nf-code{display:flex;align-items:center;justify-content:center;gap:.4rem;font-size:clamp(4rem,14vw,6.5rem);font-weight:800;line-height:1;letter-spacing:.02em;background:linear-gradient(135deg,var(--blue),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
+.nf-code span{display:inline-grid;place-items:center;width:.85em;height:.85em;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));font-size:.9em}
+.nf-code span i{font-size:.4em;color:#fff;-webkit-text-fill-color:#fff}
+.nf-card h1{margin-top:1rem;font-size:1.6rem;color:var(--dark)}
+.nf-card>p{margin:.5rem auto 0;max-width:46ch;color:var(--muted)}
+
+.nf-search{display:flex;margin:1.6rem auto 0;max-width:460px;border:1.5px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.nf-search:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(10,63,196,.12)}
+.nf-search input{flex:1;min-width:0;border:0;outline:0;padding:.85rem 1rem;background:transparent;color:var(--dark);font:inherit}
+.nf-search button{border:0;background:var(--blue);color:#fff;font:inherit;font-weight:600;padding:0 1.3rem;cursor:pointer;transition:.2s}
+.nf-search button:hover{background:var(--blue-d)}
+
+.nf-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:.7rem;margin-top:1.4rem}
+.nf-actions .btn i{margin-right:.4rem}
+.nf-actions .btn.ghost{color:var(--blue);border-color:var(--blue)}
+.nf-actions .btn.ghost:hover{background:var(--blue-l)}
+
+.nf-cats{margin-top:2rem;padding-top:1.4rem;border-top:1px solid var(--border)}
+.nf-cats span{display:block;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem}
+.nf-cats div{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem}
+.nf-cats a{padding:.4rem .95rem;border-radius:99px;background:var(--bg);border:1px solid var(--border);color:var(--dark);font-size:.85rem;font-weight:500;transition:.2s}
+.nf-cats a:hover{background:var(--blue-l);border-color:var(--blue);color:var(--blue)}
+
+@media(max-width:520px){.nf-card{padding:2rem 1rem 1.6rem}.nf-search button{padding:0 1rem}}

@@ -1,0 +1,65 @@
+/* FEXIWALT login / register (builds on home.css) */
+.auth-main{display:grid;place-items:start center;padding:2.5rem 0 3.5rem;min-height:60vh}
+.auth-card{width:100%;max-width:440px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:2.2rem 2rem;box-shadow:0 10px 30px rgba(15,27,61,.08)}
+.auth-logo{width:68px;height:68px;margin:0 auto 1rem;border-radius:50%;background:var(--blue-l);display:grid;place-items:center}
+.auth-logo img{width:50px;mix-blend-mode:multiply}
+.auth-card h1{text-align:center;font-size:1.55rem;color:var(--dark)}
+.auth-card .sub{text-align:center;font-size:.9rem;margin:.3rem 0 1.6rem}
+
+.field{margin-bottom:1.1rem}
+.field>label{display:block;font-weight:600;font-size:.88rem;color:var(--dark);margin-bottom:.4rem}
+.prefix{display:flex;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;transition:.2s;background:var(--surface)}
+.prefix:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(10,63,196,.12)}
+.prefix em{font-style:normal;background:var(--bg);padding:0 .9rem;display:grid;place-items:center;color:var(--muted);border-right:1.5px solid var(--border)}
+.prefix input{flex:1;min-width:0;border:0;outline:0;padding:.8rem 1rem;color:var(--dark);background:transparent}
+.prefix input::placeholder{color:#6b7590}
+.eye{border:0;background:none;padding:0 .9rem;color:var(--muted);cursor:pointer}
+.eye:hover{color:var(--blue)}
+.field.invalid .prefix{border-color:var(--red)}
+.hint{display:flex;justify-content:space-between;gap:1rem;min-height:1.1rem;margin-top:.3rem;font-size:.76rem}
+.err{color:var(--red);font-weight:500}
+.count{color:var(--muted);margin-left:auto}
+
+.strength{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:.5rem}
+.strength i{height:4px;border-radius:99px;background:var(--border);transition:.2s}
+.strength[data-s="1"] i:nth-child(-n+1){background:var(--red)}
+.strength[data-s="2"] i:nth-child(-n+2){background:#f59e0b}
+.strength[data-s="3"] i:nth-child(-n+3){background:#84cc16}
+.strength[data-s="4"] i{background:var(--teal)}
+
+.row-between{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
+.check{display:flex;align-items:center;gap:.5rem;font-size:.85rem;cursor:pointer}
+.check input{width:17px;height:17px;accent-color:var(--blue)}
+.check a,.link{color:var(--blue);font-weight:500}
+.check a{text-decoration:underline}
+.link{font-size:.85rem}.link:hover{text-decoration:underline}
+.terms{align-items:flex-start}
+
+.submit{width:100%;padding:.9rem;font-size:.95rem}
+.submit:disabled{opacity:.6;cursor:wait}
+.form-msg{margin-bottom:1rem;padding:.75rem 1rem;border-radius:10px;font-size:.86rem;background:#e3f6f2;color:var(--teal-d)}
+.form-msg.error{background:#fee2e2;color:#b91c1c}
+.form-msg[hidden]{display:none}
+.switch{text-align:center;margin-top:1.4rem;font-size:.9rem}
+.switch a{color:var(--blue);font-weight:600}.switch a:hover{text-decoration:underline}
+
+@media(max-width:480px){.auth-card{padding:1.6rem 1.2rem}}
+
+/* forgot password */
+.auth-card [hidden]{display:none}
+.sent-ico{width:64px;height:64px;margin:0 auto .8rem;border-radius:50%;background:#e3f6f2;color:var(--teal-d);display:grid;place-items:center;font-size:1.6rem}
+.sent-tips{list-style:none;background:var(--bg);border-radius:10px;padding:.9rem 1rem;margin:1.2rem 0;font-size:.84rem;display:grid;gap:.4rem}
+.sent-tips li::before{content:"\2022";color:var(--teal);font-weight:700;margin-right:.5rem}
+.btn.cancel.submit{background:var(--surface);border-color:var(--border);color:var(--dark)}
+.btn.cancel.submit:hover{background:var(--bg)}
+
+/* Continue with Google */
+.google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:.7rem;padding:.8rem;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--dark);font:inherit;font-weight:700;font-size:.95rem;cursor:pointer;transition:.15s}
+.google-btn:hover{background:var(--bg);border-color:#b8c3d9}
+.google-btn:disabled{opacity:.6;cursor:wait}
+.or{display:flex;align-items:center;gap:.8rem;margin:1.1rem 0;color:var(--muted);font-size:.82rem}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--border)}
+
+/* iPhone home-screen app: replaces the Google button (see js/pages/auth.js) */
+.ios-note{display:flex;gap:.6rem;align-items:flex-start;padding:.8rem 1rem;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--muted);font-size:.85rem;line-height:1.45;text-align:left}
+.ios-note i{font-size:1.1rem;color:var(--dark);margin-top:.1rem}

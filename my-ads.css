@@ -1,0 +1,47 @@
+/* My Ads + category page shared bits (builds on home.css) */
+.crumbs{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--muted);margin-bottom:1rem}
+.crumbs i{font-size:.6rem}.crumbs a:hover{color:var(--blue)}.crumbs span{color:var(--dark)}
+.page-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.3rem}
+.page-head h1{font-size:1.6rem;color:var(--dark)}
+.page-head p{font-size:.9rem}
+
+.my-list{display:grid;gap:.9rem}
+.my-item{display:grid;grid-template-columns:120px 1fr auto;gap:1.1rem;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:.8rem;box-shadow:var(--shadow)}
+.my-item.skeleton{height:120px;background:linear-gradient(90deg,#eef2f8 25%,#f8faff 50%,#eef2f8 75%);background-size:200% 100%;animation:sh 1.2s infinite}
+.my-img{width:120px;height:96px;border-radius:10px;overflow:hidden;background:#eef3ff;display:grid;place-items:center;color:#b6c2de;font-size:1.8rem}
+.my-img img{width:100%;height:100%;object-fit:cover}
+.my-info h3{font-size:1rem;font-weight:600;color:var(--dark);margin-bottom:.15rem}
+.my-info .ad-price{margin:.1rem 0 .3rem}
+.status{display:inline-block;margin-top:.5rem;font-size:.72rem;font-weight:700;padding:.15rem .6rem;border-radius:99px}
+.status.pending{background:#fef3c7;color:#92400e}
+.status.approved{background:#dcfce7;color:#166534}
+.status.rejected{background:#fee2e2;color:#991b1b}
+.my-actions{display:flex;gap:.5rem}
+.btn.sm{padding:.5rem 1rem;font-size:.82rem}
+.btn.cancel{background:var(--surface);border-color:var(--border);color:var(--dark)}
+.btn.cancel:hover{background:var(--bg)}
+.btn.del{background:var(--surface);border-color:#fecdd3;color:var(--red)}
+.btn.del:hover{background:#fee2e2}
+
+@media(max-width:640px){
+  .my-item{grid-template-columns:90px 1fr}
+  .my-img{width:90px;height:80px}
+  .my-actions{grid-column:1/-1}
+  .my-actions .btn{flex:1;text-align:center}
+}
+
+/* rejection reason (My Ads) and suspended-account notice */
+.why{margin-top:.5rem;font-size:.8rem;line-height:1.45;color:#b45309;background:#fff8e6;border:1px solid #fde7a8;border-radius:8px;padding:.5rem .7rem;max-width:460px}
+:root[data-theme="dark"] .why{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.35);color:#fcd34d}
+.ban-note{display:flex;gap:.8rem;align-items:flex-start;background:#fee2e2;border:1px solid #fecaca;color:#991b1b;border-radius:var(--r);padding:.9rem 1.1rem;margin-bottom:1.1rem;font-size:.9rem}
+.ban-note i{margin-top:.2rem}
+:root[data-theme="dark"] .ban-note{background:rgba(239,68,68,.14);border-color:rgba(239,68,68,.4);color:#fca5a5}
+
+/* sold / expired states and the "expires in N days" note */
+.status.sold{background:#e0e7ff;color:#3730a3}
+.status.expired{background:#f1f5f9;color:#475569}
+:root[data-theme="dark"] .status.sold{background:rgba(99,102,241,.2);color:#a5b4fc}
+:root[data-theme="dark"] .status.expired{background:rgba(148,163,184,.18);color:#cbd5e1}
+.life{display:inline-flex;align-items:center;gap:.35rem;margin-left:.6rem;font-size:.76rem;color:var(--muted)}
+.life.soon{color:#b45309;font-weight:600}
+:root[data-theme="dark"] .life.soon{color:#fbbf24}

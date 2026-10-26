@@ -1,0 +1,187 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // An admin is any user whose document users/<uid> has role == "admin".
+    // That field can only be set by hand in the Firebase console (see the users rules below).
+    function isAdmin() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // A banned account (users/<uid>.banned == true, set by an admin) can log in and browse but cannot post or edit ads.
+    function isBanned() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('banned', false) == true;
+    }
+
+    // ---- daily posting limit --------------------------------------------------------------------------
+    // Rules can't count documents, so every new ad must come with a bump of a per-user, per-day counter
+    // (dailyAds/<uid>_<year>-<month>-<day>, UTC) in the SAME batched write. The ad's id must also be
+    // "<uid>_<day>_<counter after the write>", so one bump can only ever pay for one ad.
+    // To change the limit, edit dailyLimit() here AND DAILY_LIMIT in js/post-ad.js.
+    function dailyLimit() { return 5; }
+    function dayKey() {
+      return string(request.time.year()) + '-' + string(request.time.month()) + '-' + string(request.time.day());
+    }
+    function myCounter() {
+      return /databases/$(database)/documents/dailyAds/$(request.auth.uid + '_' + dayKey());
+    }
+    function usedToday() { return exists(myCounter()) ? get(myCounter()).data.count : 0; }
+
+    match /dailyAds/{docId} {
+      allow read: if request.auth != null && docId == request.auth.uid + '_' + dayKey();
+      allow create: if request.auth != null
+                    && docId == request.auth.uid + '_' + dayKey()
+                    && request.resource.data.keys().hasOnly(['count', 'updatedAt'])
+                    && request.resource.data.count == 1
+                    && request.resource.data.updatedAt == request.time;
+      allow update: if request.auth != null
+                    && docId == request.auth.uid + '_' + dayKey()
+                    && request.resource.data.keys().hasOnly(['count', 'updatedAt'])
+                    && request.resource.data.count == resource.data.count + 1
+                    && request.resource.data.count <= dailyLimit()
+                    && request.resource.data.updatedAt == request.time;
+      allow delete: if false;
+    }
+
+    match /users/{uid} {
+      // you can read your own profile; admins can read anyone's
+      allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
+      // at signup you can only create YOUR document, and only as a plain "user"
+      allow create: if request.auth != null && request.auth.uid == uid && request.resource.data.role == 'user';
+      // Admins can change any profile (promote / demote, ban / unban). You can edit your own profile,
+      // but never your own role or your own ban status.
+      allow update: if isAdmin()
+                    || (request.auth != null && request.auth.uid == uid
+                        && request.resource.data.role == resource.data.role
+                        && request.resource.data.get('banned', false) == resource.data.get('banned', false));
+      allow delete: if false;
+
+      // wishlist: users/<uid>/wishlist/<adId>. Only its owner can read or change it.
+      match /wishlist/{adId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+    }
+
+    match /ads/{adId} {
+      // Everyone can read approved ads; sellers can read their own; admins can read all.
+      // (Sold ads stay readable so an old link can say "Sold". Lists only ever ask for status == approved.)
+      allow read: if resource.data.status in ['approved', 'sold']
+                  || (request.auth != null && resource.data.sellerId == request.auth.uid)
+                  || isAdmin();
+
+      // A signed-in user with a VERIFIED email can create an ad only for themselves, and only as "pending",
+      // and only within today's posting limit (see the daily limit notes above).
+      allow create: if request.auth != null
+                    && request.auth.token.email_verified == true
+                    && !isBanned()
+                    && getAfter(myCounter()).data.count <= dailyLimit()
+                    && getAfter(myCounter()).data.count == usedToday() + 1
+                    && adId == request.auth.uid + '_' + dayKey() + '_' + string(getAfter(myCounter()).data.count)
+                    && request.resource.data.sellerId == request.auth.uid
+                    && request.resource.data.status == 'pending'
+                    && request.resource.data.createdAt == request.time
+                    && request.resource.data.title is string
+                    && request.resource.data.title.size() >= 5 && request.resource.data.title.size() <= 80
+                    && request.resource.data.price is number && request.resource.data.price > 0
+                    && request.resource.data.images is list
+                    && request.resource.data.images.size() >= 1 && request.resource.data.images.size() <= 8;
+
+      // Admins can change anything (approve / reject). Sellers can edit their own ad, but every
+      // seller edit puts the ad back to "pending" so it is reviewed again. They can never approve
+      // it themselves or change its owner.
+      // What a seller may do to their OWN ad (never while banned, and never to someone else's):
+      //   edit          -> any change, but the ad goes back to "pending" for review
+      //   mark sold     -> approved -> sold, changing nothing except status and soldAt
+      //   relist        -> sold -> approved (it was already approved before it sold), fresh expiry of at most 60 days
+      //   renew         -> approved stays approved, only the expiry date moves (again at most 60 days ahead)
+      // A seller can never approve a pending or rejected ad, or give an ad more than 60 days of life.
+      function sellerOwns() {
+        return request.auth != null && !isBanned()
+               && resource.data.sellerId == request.auth.uid
+               && request.resource.data.sellerId == resource.data.sellerId;
+      }
+      function changedKeys() { return request.resource.data.diff(resource.data).affectedKeys(); }
+      function goodExpiry() {
+        return request.resource.data.expiresAt is timestamp
+               && request.resource.data.expiresAt > request.time
+               && request.resource.data.expiresAt <= request.time + duration.value(60, 'd');
+      }
+
+      allow update: if isAdmin()
+                    || (sellerOwns() && request.resource.data.status == 'pending')
+                    || (sellerOwns() && resource.data.status == 'approved' && request.resource.data.status == 'sold'
+                        && changedKeys().hasOnly(['status', 'soldAt']))
+                    || (sellerOwns() && resource.data.status == 'sold' && request.resource.data.status == 'approved'
+                        && changedKeys().hasOnly(['status', 'soldAt', 'expiresAt', 'renewedAt']) && goodExpiry())
+                    || (sellerOwns() && resource.data.status == 'approved' && request.resource.data.status == 'approved'
+                        && changedKeys().hasOnly(['expiresAt', 'renewedAt']) && goodExpiry())
+                    // anyone (even logged out) can add exactly 1 to a live ad's view or WhatsApp-tap counter, nothing else
+                    || (resource.data.status == 'approved' && changedKeys().hasOnly(['views'])
+                        && request.resource.data.views == resource.data.get('views', 0) + 1)
+                    || (resource.data.status == 'approved' && changedKeys().hasOnly(['waClicks'])
+                        && request.resource.data.waClicks == resource.data.get('waClicks', 0) + 1);
+
+      allow delete: if isAdmin() || (request.auth != null && resource.data.sellerId == request.auth.uid);
+    }
+
+    // ---- verified sellers + followers -----------------------------------------------------------------
+    // sellers/<uid>: public seller info. Only admins create it / set "verified". Anyone signed in can move
+    // "followers" up or down by exactly 1, and only together with creating / deleting their own follow document.
+    function followDoc(sid) { return /databases/$(database)/documents/follows/$(request.auth.uid + '_' + sid); }
+    match /sellers/{sid} {
+      allow read: if true;
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin()
+                    || (request.auth != null
+                        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['followers'])
+                        && ((request.resource.data.followers == resource.data.get('followers', 0) + 1
+                             && !exists(followDoc(sid)) && existsAfter(followDoc(sid)))
+                         || (request.resource.data.followers == resource.data.get('followers', 0) - 1
+                             && exists(followDoc(sid)) && !existsAfter(followDoc(sid)))));
+    }
+
+    // follows/<followerUid>_<sellerUid>: you can follow VERIFIED sellers (not yourself) and unfollow.
+    // You can see your own follows; admins can list a seller's followers (to notify them about new ads).
+    match /follows/{fid} {
+      allow get: if request.auth != null && (fid.split('_')[0] == request.auth.uid || isAdmin());
+      allow list: if isAdmin() || (request.auth != null && resource.data.followerId == request.auth.uid);
+      allow create: if request.auth != null
+                    && request.resource.data.followerId == request.auth.uid
+                    && fid == request.auth.uid + '_' + request.resource.data.sellerId
+                    && request.resource.data.sellerId != request.auth.uid
+                    && get(/databases/$(database)/documents/sellers/$(request.resource.data.sellerId)).data.get('verified', false) == true
+                    && request.resource.data.createdAt == request.time;
+      allow delete: if request.auth != null && resource.data.followerId == request.auth.uid;
+    }
+
+    // ---- notifications (the bell) ----------------------------------------------------------------------
+    // notifications/<id>: { to, type, title, body, link, read, createdAt }. Written by admins (ad approved /
+    // rejected, new ad from a seller you follow). The person it is for can read it, mark it read, or delete it.
+    match /notifications/{nid} {
+      allow read: if request.auth != null && (resource.data.to == request.auth.uid || isAdmin());
+      allow create: if isAdmin();
+      allow update: if request.auth != null && resource.data.to == request.auth.uid
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+      allow delete: if request.auth != null && (resource.data.to == request.auth.uid || isAdmin());
+    }
+
+    // Reports: a signed-in user can report an ad once (the document id is "<adId>_<reporterUid>").
+    // Only admins can read every report or change / delete them; a reporter can read their own.
+    match /reports/{reportId} {
+      allow create: if request.auth != null
+                    && reportId == request.resource.data.adId + '_' + request.auth.uid
+                    && request.resource.data.reporterId == request.auth.uid
+                    && request.resource.data.status == 'open'
+                    && request.resource.data.createdAt == request.time
+                    && request.resource.data.reason is string
+                    && request.resource.data.reason.size() > 0 && request.resource.data.reason.size() <= 60
+                    && request.resource.data.details is string && request.resource.data.details.size() <= 500;
+      allow read: if isAdmin() || (request.auth != null && resource.data.reporterId == request.auth.uid);
+      allow update, delete: if isAdmin();
+    }
+  }
+}
